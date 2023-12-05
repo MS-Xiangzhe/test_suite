@@ -32,7 +32,7 @@ def check_target_image_exist_in_image(image, target_image) -> bool:
 
 def draw_frames_and_save(full_image, target_image, coordinates, output_path):
     for pt in coordinates:
-        w, h = target_image.shape[::2]
+        w, h, *_ = target_image.shape
         bottom_right = (pt[0] + h, pt[1] + w)
         cv2.rectangle(full_image, pt, bottom_right, (0, 0, 255), 2)
     cv2.imwrite(output_path, full_image)
@@ -179,8 +179,9 @@ class TargetImage:
         if not coordinate_list:
             raise Exception(f"Can't find {self.path} in {full_image_path}")
         full_image = cv2.imread(full_image_path)
-        rsl_path = add_suffix_to_filename(
-            str(result_img_directory_path / self.path.name), f"full{time.time()}"
+        rsl_path = str(
+            result_img_directory_path
+            / self.path.with_stem(f"{time.time()}_{self.path.stem}").name
         )
         draw_frames_and_save(full_image, self.image, coordinate_list, rsl_path)
 
@@ -290,7 +291,7 @@ def test_add_suffix_to_filename():
 
 
 def get_img_dict(img_dir):
-    text_dict = {}
+    image_path_dict = {}
     target_img_directory = Path(img_dir)
     for file in Path(target_img_directory).iterdir():
         if file.is_file():
@@ -299,22 +300,23 @@ def get_img_dict(img_dir):
             if args[-1] == "full":
                 continue
             i, start_prefix, *_ = args
-            text_cell = text_dict.setdefault(i, [None, None])
+            text_cell = image_path_dict.setdefault(i, [None, None])
             if start_prefix == "start":
                 text_cell[0] = file_path
             elif start_prefix == "end":
                 text_cell[1] = file_path
 
+    print(image_path_dict)
     image_dict = {}
-    for i in text_dict.keys():
-        if text_dict[i][0] is None or text_dict[i][1] is None:
+    for i in image_path_dict.keys():
+        if image_path_dict[i][0] is None or image_path_dict[i][1] is None:
             raise Exception(f"Can't find start or end for {i}")
-        start_image_path = text_dict[i][0]
+        start_image_path = image_path_dict[i][0]
         start_image = TargetImage(start_image_path)
         start_image_full_path = add_suffix_to_filename(start_image_path, "full")
         start_image.init_split_coordinate(start_image_full_path)
         start_image.test_split_coordinate(start_image_full_path)
-        end_image_path = text_dict[i][1]
+        end_image_path = image_path_dict[i][1]
         end_image = TargetImage(end_image_path)
         end_image_full_path = add_suffix_to_filename(end_image_path, "full")
         end_image.init_split_coordinate(end_image_full_path)
@@ -345,29 +347,20 @@ def main(
         if select_frame > 0:
             if frames_count % select_frame != 0:
                 continue
-        pass_index_list = []
-        for index, (image_path, target_image) in enumerate(start_image_map.items()):
-            if target_image.get_coordinate_list_in_full_image(image):
-                video_time = frames_count / fps
-                key_time_list.append((image_path, video_time))
-                print("select_frame:", frames_count)
-                pass_index_list.append(index)
-        for index, (image_path, target_image) in enumerate(end_image_map.items()):
-            if index in pass_index_list:
-                continue
-            coordinate_list = target_image.get_coordinate_list_in_full_image(image)
-            if coordinate_list:
-                rsl_path = add_suffix_to_filename(
-                    str(result_img_directory_path / self.path.name),
-                    f"full{time.time()}",
-                )
-                draw_frames_and_save(
-                    image, target_image.image, coordinate_list, rsl_path
-                )
-                video_time = frames_count / fps
-                key_time_list.append((image_path, video_time))
-                print("select_frame:", select_frame)
-
+        for map in [start_image_map, end_image_map]:
+            for image_path, target_image in map.items():
+                coordinate_list = target_image.get_coordinate_list_in_full_image(image)
+                if coordinate_list:
+                    rsl_path = str(
+                        result_img_directory_path
+                        / image_path.with_stem(f"{time.time()}_{image_path.stem}")
+                    )
+                    draw_frames_and_save(
+                        image, target_image.image, coordinate_list, rsl_path
+                    )
+                    video_time = frames_count / fps
+                    key_time_list.append((image_path, video_time))
+                    print("selected_frame:", frames_count, "video_time:", video_time)
     print(key_time_list)
     image_path_dict = {
         start_image.path: end_image.path
@@ -378,8 +371,7 @@ def main(
 
 
 if __name__ == "__main__":
-    text_dict = get_img_dict(target_img_directory)
+    img_dict = get_img_dict(target_img_directory)
     print(video_path)
-    print(text_dict)
-    time_dict = main(video_path, text_dict, select_frame)
+    time_dict = main(video_path, img_dict, select_frame)
     print(time_dict)

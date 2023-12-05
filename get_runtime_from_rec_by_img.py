@@ -353,7 +353,7 @@ def main(
                 if coordinate_list:
                     rsl_path = str(
                         result_img_directory_path
-                        / image_path.with_stem(f"{time.time()}_{image_path.stem}")
+                        / image_path.with_stem(f"{time.time()}_{image_path.stem}").name
                     )
                     draw_frames_and_save(
                         image, target_image.image, coordinate_list, rsl_path

@@ -30,16 +30,8 @@ def check_target_image_exist_in_image(image, target_image) -> bool:
     return False
 
 
-def draw_frames_and_save(full_image, target_image, coordinates_percent, output_path):
-    # Get the dimensions of the full image
-    full_image_height, full_image_width = full_image.shape[:2]
-
-    for pt_percent in coordinates_percent:
-        # Convert the coordinates from percentages back to absolute coordinates
-        pt = (
-            int(pt_percent[0] * full_image_width),
-            int(pt_percent[1] * full_image_height),
-        )
+def draw_frames_and_save(full_image, target_image, coordinates, output_path):
+    for pt in coordinates:
         w, h = target_image.shape[::2]
         bottom_right = (pt[0] + h, pt[1] + w)
         cv2.rectangle(full_image, pt, bottom_right, (0, 0, 255), 2)
@@ -220,7 +212,8 @@ class TargetImage:
         matched_image = full_image[
             best_match[1] : bottom_right[1], best_match[0] : bottom_right[0]
         ]
-        return get_target_loc(matched_image, self.image, self.threshold)
+        target_loc = get_target_loc(matched_image, self.image, self.threshold)
+        return [(pt[0] + best_match[0], pt[1] + best_match[1]) for pt in target_loc]
 
     @staticmethod
     def __find_target_in_image(
@@ -362,7 +355,15 @@ def main(
         for index, (image_path, target_image) in enumerate(end_image_map.items()):
             if index in pass_index_list:
                 continue
-            if target_image.get_coordinate_list_in_full_image(image):
+            coordinate_list = target_image.get_coordinate_list_in_full_image(image)
+            if coordinate_list:
+                rsl_path = add_suffix_to_filename(
+                    str(result_img_directory_path / self.path.name),
+                    f"full{time.time()}",
+                )
+                draw_frames_and_save(
+                    image, target_image.image, coordinate_list, rsl_path
+                )
                 video_time = frames_count / fps
                 key_time_list.append((image_path, video_time))
                 print("select_frame:", select_frame)

@@ -6,9 +6,10 @@ def parse_file_name(file_name: str) -> list[str]:
     args_list = []
     for s in file_name.split("_"):
         try:
-            args_list.append(int(s))
+            s = int(s)
         except Exception:
-            args_list.append(s)
+            pass
+        args_list.append(s)
     return args_list
 
 

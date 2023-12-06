@@ -13,15 +13,16 @@ class TargetImage:
         self.is_full = False
         args = parse_file_name(path)
         self.index_list = []
-        arg_index = 0
         for arg in args:
             if isinstance(arg, int):
                 self.index_list.append(arg)
-                arg_index += 1
         if args[-1] == "full":
             self.is_full = True
-        if args[arg_index] == "from":
-            self.stop_at_begin = True
+        for arg in args[::-1]:
+            if arg in ["from", "to"]:
+                if arg == "from":
+                    self.stop_at_begin = True
+                break
         try:
             self.threshold = float(args[-1])
         except Exception:

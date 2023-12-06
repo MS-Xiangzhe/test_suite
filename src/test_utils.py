@@ -14,6 +14,8 @@ def test_parse_file_name():
         "to",
         "0.7",
     ]
+    assert parse_file_name("1111_只是提示信息_0.7.png") == [1111, "只是提示信息", "0.7"]
+    assert parse_file_name("1111_这里有 空格_0.7.png") == [1111, "这里有 空格", "0.7"]
 
 
 def test_add_suffix_to_filename():

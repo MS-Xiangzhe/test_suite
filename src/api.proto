@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+service  ImageService {
+   // (Method definitions not shown)
+}

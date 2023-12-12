@@ -1,0 +1,16 @@
+[project]
+name = "AutoUI-Test"
+version = "0.0.1"
+authors = [
+  { name="Zephyrus", email="xiangzhedev@gmail.com" },
+]
+description = "Test suite for auto-test UI, based on OpenCV and AI"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+]
+
+[project.urls]
+Homepage = "https://github.com/MS-Xiangzhe/test_suite"
+Issues = "https://github.com/MS-Xiangzhe/test_suite/issues"

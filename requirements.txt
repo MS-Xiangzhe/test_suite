@@ -2,3 +2,5 @@ opencv-python==4.8.1.78
 scikit-image==0.22.0
 PyAutoGUI==0.9.54
 pytest==7.4.3
+pywin32==306
+pytesseract==0.3.10

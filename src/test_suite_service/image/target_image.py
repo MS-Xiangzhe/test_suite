@@ -1,8 +1,8 @@
 from pathlib import Path
 import time
 import cv2
-from utils import parse_file_name
-from cv2utils import get_target_loc, draw_frames_and_save
+from .utils import parse_file_name
+from .cv2utils import get_target_loc, draw_frames_and_save
 
 
 class TargetImage:

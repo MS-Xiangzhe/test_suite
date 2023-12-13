@@ -1,4 +1,4 @@
-from get_runtime_from_rec_by_img import (
+from .get_runtime_from_rec_by_img import (
     get_time_length_by_key_time_list,
     add_suffix_to_filename,
 )

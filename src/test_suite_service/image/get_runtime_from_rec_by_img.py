@@ -1,9 +1,9 @@
 import time
 import cv2
 from pathlib import Path
-from target_image import TargetImage
-from utils import parse_file_name, add_suffix_to_filename
-from cv2utils import draw_frames_and_save
+from .target_image import TargetImage
+from .utils import parse_file_name, add_suffix_to_filename
+from .cv2utils import draw_frames_and_save
 
 VIDEO_PATH = "C:\\Users\\v-xceng\\Videos\\rec.mp4"
 TARGET_IMG_DIR = "D:\\test\\img"

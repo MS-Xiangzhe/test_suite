@@ -1,4 +1,4 @@
-from target_image import TargetImage
+from .target_image import TargetImage
 
 
 def test_init_target_image():

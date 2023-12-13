@@ -1,4 +1,4 @@
-from utils import parse_file_name, add_suffix_to_filename
+from .utils import parse_file_name, add_suffix_to_filename
 
 
 def test_parse_file_name():

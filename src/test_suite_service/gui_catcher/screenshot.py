@@ -15,10 +15,10 @@ def _screenshot(window_name: str or None = None):
 
     win32gui.EnumWindows(enum_cb, toplist)
 
-    firefox = [(hwnd, title) for hwnd, title in winlist if window_name in title]
+    window_list = [(hwnd, title) for hwnd, title in winlist if window_name in title]
     # just grab the hwnd for first window matching firefox
-    firefox = firefox[0]
-    hwnd = firefox[0]
+    window_list = window_list[0]
+    hwnd = window_list[0]
 
     win32gui.SetForegroundWindow(hwnd)
     bbox = win32gui.GetWindowRect(hwnd)
@@ -29,7 +29,7 @@ def _screenshot(window_name: str or None = None):
 
 def screenshot(window_name: str or None = None):
     pil_image = _screenshot(window_name)
-    cv2.cvtColor(numpy.array(pil_image), cv2.COLOR_RGB2BGR)
+    return cv2.cvtColor(numpy.array(pil_image), cv2.COLOR_RGB2BGR)
 
 
 # TODO: thread safe

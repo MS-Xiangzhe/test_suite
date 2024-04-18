@@ -12,11 +12,17 @@ class PressStatus(Enum):
     UP = "up"
     HOTKEY = "hotkey"
 
+    @staticmethod
+    def str_to_enum(action_str: str) -> "PressStatus":
+        return getattr(PressStatus, action_str.upper(), None)
+
 
 # Support keys: https://pyautogui.readthedocs.io/en/latest/keyboard.html#keyboard-keys
 def press(keys: list[str], status: PressStatus = PressStatus.CLICK):
     if isinstance(keys, str):
         key_list = [keys]
+    else:
+        key_list = keys
     if status == PressStatus.CLICK:
         pyautogui.press(key_list)
     elif status == PressStatus.DOWN:

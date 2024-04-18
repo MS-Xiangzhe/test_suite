@@ -1,0 +1,5 @@
+opencv-python==4.8.1.78
+scikit-image==0.22.0
+pytesseract==0.3.10
+grpcio==1.62.1
+grpcio-tools==1.62.1

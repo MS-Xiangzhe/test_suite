@@ -1,0 +1,1 @@
+RPC_SERVER_ADDRESS = "localhost:50051"

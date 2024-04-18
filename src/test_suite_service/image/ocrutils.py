@@ -1,3 +1,0 @@
-import pytesseract
-
-# TODO

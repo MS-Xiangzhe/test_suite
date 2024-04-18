@@ -34,3 +34,34 @@ def compare_images_color(imageA, imageB):
     similarity_index = (ssim_b + ssim_g + ssim_r) / 3.0
     difference_percentage = (1 - similarity_index) * 100
     return difference_percentage
+
+
+def _process_color_in_image(image, color_rgb, remove=True):
+    # Convert the image to the HSV color space
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
+    # Convert the RGB color to HSV
+    color_hsv = cv2.cvtColor(np.uint8([[color_rgb]]), cv2.COLOR_RGB2HSV)[0][0]
+
+    # Define a range for the color
+    lower = np.array([color_hsv[0] - 10, 100, 100], dtype=np.uint8)
+    upper = np.array([color_hsv[0] + 10, 255, 255], dtype=np.uint8)
+
+    # Create a mask for the color
+    mask = cv2.inRange(hsv, lower, upper)
+
+    # Bitwise-AND the mask and the original image
+    if remove:
+        result = cv2.bitwise_and(image, image, mask=~mask)
+    else:
+        result = cv2.bitwise_and(image, image, mask=mask)
+
+    return result
+
+
+def remove_color_in_image(image, color_rgb):
+    return _process_color_in_image(image, color_rgb, remove=True)
+
+
+def keep_color_in_image(image, color_rgb):
+    return _process_color_in_image(image, color_rgb, remove=False)

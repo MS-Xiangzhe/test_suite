@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+message ScreenShotRequest {
+   optional string window_name = 1;
+}
+
+message ScreenShotResponse {
+   bytes image = 1;
+   int64 left_top_x = 2;
+   int64 left_top_y = 3;
+}
+
+message KeyboardEventRequest {
+   repeated string keys = 1;
+   string action = 2;
+}
+
+message KeyboardInputRequest {
+   string text = 1;
+   float interval = 2;
+}
+
+message MouseEventRequest {
+   string action = 1;
+   int64 x = 2;
+   int64 y = 3;
+   int64 end_x = 4;
+   int64 end_y = 5;
+   string button = 6;
+   double interval = 7;
+   double over_time = 8;
+   int64 length = 9;
+   string direction = 10;
+}
+
+message RunCommandRequest {
+   string command = 1;
+}
+
+message RunCommandResponse {
+   int32 exit_code = 1;
+   string stdout = 2;
+   string stderr = 3;
+}
+
+service GUICatcherService {
+   rpc ScreenShot (ScreenShotRequest) returns (ScreenShotResponse) {}
+   rpc KeyboardEvent (KeyboardEventRequest) returns (google.protobuf.Empty) {}
+   rpc KeyboardInput (KeyboardInputRequest) returns (google.protobuf.Empty) {}
+   rpc MouseEvent (MouseEventRequest) returns (google.protobuf.Empty) {}
+   rpc RunCommand (RunCommandRequest) returns (RunCommandResponse) {}
+}

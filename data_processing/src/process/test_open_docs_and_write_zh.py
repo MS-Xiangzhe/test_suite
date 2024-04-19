@@ -49,7 +49,7 @@ def input_text():
             helpers.keyboard_event(["win", "space"], "hotkey")
     except _InactiveRpcError:
         pass
-    helpers.keyboard_event("Abby", "click")
+    helpers.keyboard_event("Abby ", "click")
     try:
         if not helpers.is_image_exist(input_method_path):
             helpers.keyboard_event(["win", "space"], "hotkey")
@@ -67,6 +67,11 @@ def input_text():
     helpers.keyboard_event("huanyinghuilai", "click")
     helpers.keyboard_event(["space"], "click")
     helpers.keyboard_event(["enter"], "click")
+    try:
+        if helpers.is_image_exist(input_method_path):
+            helpers.keyboard_event(["win", "space"], "hotkey")
+    except _InactiveRpcError:
+        pass
     assert helpers.is_text_exist("Abby")
 
 
